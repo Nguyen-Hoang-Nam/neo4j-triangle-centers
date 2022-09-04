@@ -1,0 +1,9 @@
+{
+    "dependencies": {
+        "axios": "^0.27.2",
+        "cheerio": "^1.0.0-rc.12",
+        "dotenv": "^16.0.2",
+        "neo4j-driver": "^4.4.7"
+    },
+    "type": "module"
+}
