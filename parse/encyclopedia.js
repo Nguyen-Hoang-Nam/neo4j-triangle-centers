@@ -2,18 +2,20 @@ const getPointName = (str) => {
     if (str.includes("=")) {
         const [xNumber, name] = str.split("=");
 
-        return [toNumber(xNumber), name];
+        return [toNumber(xNumber.trim()), name.trim()];
     } else {
-        // X42 has wrong format
-        const xNumber = str.substring(0, 6);
-        const name = str.substring(7);
+        const leftPart = str.split(")")[0] + ")";
+        const xNumber = leftPart;
+        const name = str.substring(leftPart.length).trim();
+
+        console.log(xNumber);
 
         return [toNumber(xNumber), name];
     }
 };
 
 const toNumber = (xNumber) => {
-    return xNumber.slice(2, -2);
+    return xNumber.slice(2, -1);
 };
 
 export { getPointName };
