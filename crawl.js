@@ -22,12 +22,12 @@ const fetchData = async (page) => {
 
     let data = "";
 
-    const filePath = createFilePath(page);
-    if (checkFileExist(filePath)) {
-        const response = await readFile(filePath, { Encoding: "Utf8" });
+    try {
+        const filePath = createFilePath(page);
+        await checkFileExist(filePath);
 
-        data = response;
-    } else {
+        data = await readFile(filePath, { Encoding: "Utf8" });
+    } catch {
         let response = await axios(url).catch((err) => console.log(err));
 
         if (response.status !== 200) {

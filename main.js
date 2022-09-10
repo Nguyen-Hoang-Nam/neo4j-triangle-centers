@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const connection = driver(
-    "neo4j://localhost/7687",
+    process.env.NEO4J_CONNECTION_STRING,
     auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 const session = connection.session();

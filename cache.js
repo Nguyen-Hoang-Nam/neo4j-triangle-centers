@@ -1,5 +1,4 @@
-import { stat, writeFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
+import fs from "fs";
 import path from "path";
 
 const CACHE = "cache";
@@ -14,22 +13,41 @@ const createFilePath = (fileName) => {
     return path.join(CACHE, createFileName(fileName) + ".html");
 };
 
-const checkFileExist = (file) => {
-    return existsSync(file);
+const checkFileExist = async (file) => {
+    return fs.promises.access(file, fs.constants.R_OK);
+};
+
+const clearCacheFile = async (partFileName) => {
+    const fileNames = await fs.promises.readdir(CACHE);
+
+    const promises = fileNames
+        .filter((fileName) => {
+            return fileName.includes(partFileName);
+        })
+        .map((filename) => {
+            return fs.promises.rm(path.join(CACHE, filename));
+        });
+
+    Promise.all(promises);
 };
 
 const cache = async (response, fileName) => {
-    await stat(CACHE)
+    await fs.promises
+        .stat(CACHE)
         .then(async (stats) => {
             if (!stats.isDirectory()) {
-                await mkdir(CACHE);
+                await fs.promises.mkdir(CACHE);
             }
         })
         .catch(async (_) => {
-            await mkdir(CACHE);
+            await fs.promises.mkdir(CACHE);
         });
 
-    await writeFile(createFilePath(fileName), Buffer.from(response));
+    await clearCacheFile(fileName);
+    await fs.promises.writeFile(
+        createFilePath(fileName),
+        Buffer.from(response)
+    );
 };
 
 export { cache, checkFileExist, createFilePath };
