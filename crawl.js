@@ -17,7 +17,7 @@ const otherPage = (page) => {
     return `ETCPart${page}`;
 };
 
-const fetchData = async (page) => {
+const fetchData = async (page, number) => {
     const url = `${ORIGIN}/${page}.html`;
 
     let data = "";
@@ -40,7 +40,7 @@ const fetchData = async (page) => {
         data = response.data;
     }
 
-    let obj = await parse(data);
+    let obj = await parse(data, number);
     return obj;
 };
 
@@ -54,7 +54,7 @@ const parseHtml = async () => {
             page = otherPage(i);
         }
 
-        promises.push(fetchData(page));
+        promises.push(fetchData(page, i));
     }
 
     return Promise.all(promises);
